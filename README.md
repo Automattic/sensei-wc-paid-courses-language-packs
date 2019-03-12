@@ -1,0 +1,1 @@
+# sensei-wc-paid-courses-language-packs
