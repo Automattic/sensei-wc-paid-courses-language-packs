@@ -21,9 +21,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask( 'default', function () {
-        grunt.log.writeln( "######################################################### " );
-        grunt.log.writeln( "##### Sensei WC Paid CoursesLanguage Pack Generator ##### " );
-        grunt.log.writeln( "######################################################### " );
+        grunt.log.writeln( "########################################################### " );
+        grunt.log.writeln( "##### Sensei WC Paid Courses Language Pack Generator ###### " );
+        grunt.log.writeln( "########################################################### " );
         grunt.log.writeln( " # Commands: \n" );
         grunt.log.writeln( " grunt build:{version}    =  Build all the translation packages." );
     });
