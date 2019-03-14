@@ -9,6 +9,8 @@ const po = require('pofile');
 module.exports = function (grunt) {
     'use strict';
 
+    let translationMeta = {};
+
     grunt.initConfig({
         prefix: 'sensei-wc-paid-courses',
         minimumPercentageComplete: 70,
@@ -69,13 +71,12 @@ module.exports = function (grunt) {
                     grunt.log.error("Invalid set of translations received.");
                     done();
                 }
-                let translationMeta = {};
                 let languageBuilds = [];
                 translations.translation_sets.forEach(function (ts) {
                     if (ts.percent_translated < grunt.config.get('minimumPercentageComplete')) {
                         grunt.log.writeln("Skipping " + ts.name + " as it is only " + ts.percent_translated + "% translated.");
                     }
-                    languageBuilds.push(buildLanguage(basePackagePath, ts, translationMeta));
+                    languageBuilds.push(buildLanguage(basePackagePath, ts));
                 });
 
                 let buildPromise = Promise.all(languageBuilds);
@@ -102,7 +103,7 @@ module.exports = function (grunt) {
         })
     });
 
-    const buildLanguage = (async (basePackagePath, ts, meta) => {
+    const buildLanguage = (async (basePackagePath, ts) => {
         await new Promise((resolve, reject) => {
             let tmpMoPath = 'tmp/' + grunt.config.get('prefix') + '-' + ts.wp_locale + '.mo';
             let tmpPoPath = 'tmp/' + grunt.config.get('prefix') + '-' + ts.wp_locale + '.po';
@@ -131,7 +132,7 @@ module.exports = function (grunt) {
                     if ( typeof po.headers['PO-Revision-Date'] === 'string' ) {
                         metadata['updated'] = po.headers['PO-Revision-Date'];
                     }
-                    meta[ts.wp_locale] = metadata;
+                    translationMeta[ts.wp_locale] = metadata;
                 });
 
                 let zip = new require('node-zip')();
