@@ -143,7 +143,6 @@ module.exports = function (grunt) {
                     if ( typeof po.headers['PO-Revision-Date'] === 'string' ) {
                         metadata['updated'] = po.headers['PO-Revision-Date'];
                     }
-                    grunt.log.writeln("Added meta for " + ts.wp_locale);
                     translationMeta[ts.wp_locale] = metadata;
                     resolve();
                 });
