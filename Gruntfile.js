@@ -126,15 +126,6 @@ module.exports = function (grunt) {
 
                 let zipDest = basePackagePath + '/' + ts.wp_locale + '.zip';
 
-                po.load(tmpPoPath, function (err, po) {
-                    let metadata = {};
-                    metadata['updated'] = false;
-                    if ( typeof po.headers['PO-Revision-Date'] === 'string' ) {
-                        metadata['updated'] = po.headers['PO-Revision-Date'];
-                    }
-                    translationMeta[ts.wp_locale] = metadata;
-                });
-
                 let zip = new require('node-zip')();
                 zip.file(path.basename(tmpPoPath), fs.readFileSync(tmpPoPath));
                 zip.file(path.basename(tmpMoPath), fs.readFileSync(tmpMoPath));
@@ -145,7 +136,17 @@ module.exports = function (grunt) {
                 });
                 fs.writeFileSync(zipDest, data, 'binary');
 
-                resolve();
+
+                po.load(tmpPoPath, function (err, po) {
+                    let metadata = {};
+                    metadata['updated'] = false;
+                    if ( typeof po.headers['PO-Revision-Date'] === 'string' ) {
+                        metadata['updated'] = po.headers['PO-Revision-Date'];
+                    }
+                    grunt.log.writeln("Added meta for " + ts.wp_locale);
+                    translationMeta[ts.wp_locale] = metadata;
+                    resolve();
+                });
             })
             .catch(err => {
                 grunt.log.error(err);
