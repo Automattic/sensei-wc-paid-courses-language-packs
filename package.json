@@ -6,9 +6,9 @@
   "dependencies": {
     "download": "^7.1.0",
     "fetch": "^1.1.0",
-    "grunt": "^1.0.3",
+    "grunt": "^1.0.4",
     "grunt-contrib-clean": "^2.0.0",
-    "grunt-git": "^1.0.13",
+    "grunt-git": "^1.0.14",
     "node-fetch": "^2.3.0",
     "node-zip": "^1.1.1",
     "pofile": "^1.0.11"
