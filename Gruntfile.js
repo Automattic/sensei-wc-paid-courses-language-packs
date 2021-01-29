@@ -146,7 +146,7 @@ module.exports = function (grunt) {
                     const zipDest = basePackagePath + '/' + ts.wp_locale + '.zip';
 
                     exec(
-                        'cd ' + tmpLangPath + ' && wp i18n make-json ' + path.parse( tmpPoPath ).base,
+                        'cd ' + tmpLangPath + ' && ../../vendor/bin/wp i18n make-json ' + path.parse( tmpPoPath ).base,
                         function ( error, stdout, stderr ) {
                             if ( error ) {
                                 reject();
