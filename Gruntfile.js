@@ -136,56 +136,56 @@ module.exports = function (grunt) {
                     throw Error("Unable to download files for " + ts.name);
                 }
             })
-            .catch(err => {
-                grunt.log.error(err);
-                grunt.log.error("Unable to download files for " + ts.name);
-            })
-            .then(function () {
-                grunt.log.writeln("Downloaded all files for " + ts.name);
+                .catch(err => {
+                    grunt.log.error(err);
+                    grunt.log.error("Unable to download files for " + ts.name);
+                })
+                .then(function () {
+                    grunt.log.writeln("Downloaded all files for " + ts.name);
 
-                const zipDest = basePackagePath + '/' + ts.wp_locale + '.zip';
+                    const zipDest = basePackagePath + '/' + ts.wp_locale + '.zip';
 
-                exec(
-                    'cd ' + tmpLangPath + ' && wp i18n make-json ' + path.parse( tmpPoPath ).base,
-                    function ( error, stdout, stderr ) {
-                        if ( error ) {
-                            reject();
-                            return;
-                        }
-
-                        fs.readdir(tmpLangPath, (err, files) => {
-                            if (err) throw err;
-
-                            const zip = new require('node-zip')();
-                            for (const file of files) {
-                                zip.file(file, fs.readFileSync(path.join(tmpLangPath, file)));
+                    exec(
+                        'cd ' + tmpLangPath + ' && wp i18n make-json ' + path.parse( tmpPoPath ).base,
+                        function ( error, stdout, stderr ) {
+                            if ( error ) {
+                                reject();
+                                return;
                             }
 
-                            const data = zip.generate({
-                                base64: false,
-                                compression: 'DEFLATE'
-                            });
+                            fs.readdir(tmpLangPath, (err, files) => {
+                                if (err) throw err;
 
-                            fs.writeFileSync(zipDest, data, 'binary');
-
-                            po.load(tmpPoPath, function (err, po) {
-                                const metadata = {};
-                                metadata['updated'] = false;
-                                if ( typeof po.headers['PO-Revision-Date'] === 'string' ) {
-                                    metadata['updated'] = po.headers['PO-Revision-Date'];
+                                const zip = new require('node-zip')();
+                                for (const file of files) {
+                                    zip.file(file, fs.readFileSync(path.join(tmpLangPath, file)));
                                 }
-                                translationMeta[ts.wp_locale] = metadata;
-                                resolve();
+
+                                const data = zip.generate({
+                                    base64: false,
+                                    compression: 'DEFLATE'
+                                });
+
+                                fs.writeFileSync(zipDest, data, 'binary');
+
+                                po.load(tmpPoPath, function (err, po) {
+                                    const metadata = {};
+                                    metadata['updated'] = false;
+                                    if ( typeof po.headers['PO-Revision-Date'] === 'string' ) {
+                                        metadata['updated'] = po.headers['PO-Revision-Date'];
+                                    }
+                                    translationMeta[ts.wp_locale] = metadata;
+                                    resolve();
+                                });
                             });
-                        });
 
 
-                    }
-                );
-            })
-            .catch(err => {
-                grunt.log.error(err);
-            });
+                        }
+                    );
+                })
+                .catch(err => {
+                    grunt.log.error(err);
+                });
         }).catch(err => [Error]);
     });
 
