@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         prefix: 'sensei-wc-paid-courses',
-        minimumPercentageComplete: 70,
+        minimumPercentageComplete: 30,
         baseFileUrl: 'https://translate.wordpress.com/projects/sensei%2Fsensei-wc-paid-courses',
         clean: {
             tmp: "tmp/*"
@@ -71,12 +71,16 @@ module.exports = function (grunt) {
                 if (typeof translations.translation_sets === 'array') {
                     grunt.log.error("Invalid set of translations received.");
                     done();
+
+                    return;
                 }
 
                 const languageBuilds = [];
                 translations.translation_sets.forEach(function (ts) {
                     if (ts.percent_translated < grunt.config.get('minimumPercentageComplete')) {
                         grunt.log.writeln("Skipping " + ts.name + " as it is only " + ts.percent_translated + "% translated.");
+
+                        return true;
                     }
                     languageBuilds.push(buildLanguage(basePackagePath, ts));
                 });
@@ -146,7 +150,7 @@ module.exports = function (grunt) {
                     const zipDest = basePackagePath + '/' + ts.wp_locale + '.zip';
 
                     exec(
-                        'cd ' + tmpLangPath + ' && ../../vendor/bin/wp i18n make-json ' + path.parse( tmpPoPath ).base,
+                        'cd ' + tmpLangPath + ' && ../../vendor/bin/wp i18n make-json --no-purge ' + path.parse( tmpPoPath ).base,
                         function ( error, stdout, stderr ) {
                             if ( error ) {
                                 reject();
