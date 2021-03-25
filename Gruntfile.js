@@ -33,6 +33,13 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', function (version) {
         const done = this.async();
+
+        if (!fs.existsSync('./vendor/bin/wp')) {
+            grunt.log.error('Please run `composer install` to install dependencies');
+            done();
+            return;
+        }
+
         if ( ! version ) {
             grunt.log.error('Must be called with version number. Example: `grunt build:1.0.0`');
             done();
